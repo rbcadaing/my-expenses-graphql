@@ -1,0 +1,24 @@
+type Category {
+  id: ID!
+  name: String!
+  description: String
+  color: String!
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String
+  color: String!
+}
+
+extend type Query {
+  "Get all categories"
+  categories: [Category!]!
+  "Get a category by ID"
+  category(id: ID!): Category
+}
+
+extend type Mutation {
+  "Create a new category"
+  createCategory(input: CreateCategoryInput!): Category!
+}

@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Expense {
+  id          String    @id @default(uuid())
+  description String
+  amount      Decimal   @db.Decimal(18, 2)
+  date        DateTime
+  categoryId  String    @map("category_id")
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@index([date])
+  @@index([categoryId])
+  @@map("expenses")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  color       String    @default("#000000")
+  expenses    Expense[]
+
+  @@map("categories")
+}

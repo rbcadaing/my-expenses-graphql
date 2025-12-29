@@ -1,0 +1,73 @@
+type Expense {
+  "The unique identifier of the expense"
+  id: ID!
+  "The description of the expense"
+  description: String!
+  "The amount of the expense"
+  amount: Float!
+  "The date of the expense"
+  date: DateTime!
+  "The category ID this expense belongs to"
+  categoryId: ID!
+  "The category this expense belongs to"
+  category: Category!
+  "When the expense was created"
+  createdAt: DateTime!
+  "When the expense was last updated"
+  updatedAt: DateTime
+}
+
+type MonthlyExpense {
+  moth: String!
+  year: Int!
+  additionalIncome: Float!
+  salary: Float!
+  totalExpenses: Float!
+  netIncome: Float!
+  expenses: [Expense!]!
+}
+
+input CreateExpenseInput {
+  description: String!
+  amount: Float!
+  date: DateTime!
+  categoryId: ID!
+}
+
+input UpdateExpenseInput {
+  description: String!
+  amount: Float!
+  date: DateTime!
+  categoryId: ID!
+}
+
+type Query {
+  "Get all expenses"
+  expenses: [Expense!]!
+  "Get an expense by ID"
+  expense(id: ID!): Expense
+  "Get expenses by category"
+  expensesByCategory(categoryId: ID!): [Expense!]!
+  "Get expenses by month and year"
+  expensesByMonthAndYear(month: Int!, year: Int!): [Expense!]!
+  "Get monthly expense report"
+  expensesMonthlyReport(month: Int!, year: Int!, salary: Float!, additionalIncome: Float!): MonthlyExpense!
+}
+
+type Mutation {
+  "Create a new expense"
+  createExpense(input: CreateExpenseInput!): Expense!
+  "Update an existing expense"
+  updateExpense(id: ID!, input: UpdateExpenseInput!): Expense!
+  "Delete an expense"
+  deleteExpense(id: ID!): Boolean!
+}
+
+type Subscription {
+  "Subscribe to expense creation events"
+  expenseCreated: Expense!
+  "Subscribe to expense updates"
+  expenseUpdated: Expense!
+}
+
+scalar DateTime
