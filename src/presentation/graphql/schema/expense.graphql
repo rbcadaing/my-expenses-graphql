@@ -18,13 +18,23 @@ type Expense {
 }
 
 type MonthlyExpense {
-  moth: String!
+  month: String!
   year: Int!
-  additionalIncome: Float!
+  additionalIncome: [AdditionalIncome]!
   salary: Float!
   totalExpenses: Float!
   netIncome: Float!
   expenses: [Expense!]!
+}
+
+type AdditionalIncome {
+  description: String!
+  amount: Float!
+}
+
+input AdditionalIncomeInput {
+  description: String!
+  amount: Float!
 }
 
 input CreateExpenseInput {
@@ -51,7 +61,7 @@ type Query {
   "Get expenses by month and year"
   expensesByMonthAndYear(month: Int!, year: Int!): [Expense!]!
   "Get monthly expense report"
-  expensesMonthlyReport(month: Int!, year: Int!, salary: Float!, additionalIncome: Float!): MonthlyExpense!
+  expensesMonthlyReport(month: Int!, year: Int!, salary: Float!, additionalIncome: [AdditionalIncomeInput]!): MonthlyExpense!
 }
 
 type Mutation {
