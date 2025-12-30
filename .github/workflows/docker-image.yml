@@ -2,11 +2,6 @@ name: MyExpenses Docker Image CI
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'dev'
   push:
     branches: [ "main" ]
   pull_request:
@@ -17,8 +12,26 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    environment: DEV
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-expenses:$(date +%s)
+    - name: Docker Login
+      uses: docker/login-action@v3.6.0
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+    - name: Publish MyExpenses Docker Image
+      run: |
+        docker build -t my-expenses:$(date +%s) .
+        docker tag my-expenses:$(date +%s) rbcadaing/my-expenses:$(date +%s)
+        docker push rbcadaing/my-expenses:$(date +%s)
+
+
+
+    
+    
+
+
+          
+    
