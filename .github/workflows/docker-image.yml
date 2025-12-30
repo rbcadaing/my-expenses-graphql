@@ -23,7 +23,7 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
     - name: Publish MyExpenses Docker Image
       run: |
-        docker build -t my-expenses:$(date +%s) .
+        docker build -t my-expenses:latest .
         docker tag my-expenses:latest rbcadaing/my-expenses:latest
         docker push rbcadaing/my-expenses:latest
 
