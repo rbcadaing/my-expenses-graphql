@@ -24,8 +24,8 @@ jobs:
     - name: Publish MyExpenses Docker Image
       run: |
         docker build -t my-expenses:$(date +%s) .
-        docker tag my-expenses:$(date +%s) rbcadaing/my-expenses:$(date +%s)
-        docker push rbcadaing/my-expenses:$(date +%s)
+        docker tag my-expenses:latest rbcadaing/my-expenses:latest
+        docker push rbcadaing/my-expenses:latest
 
 
 
