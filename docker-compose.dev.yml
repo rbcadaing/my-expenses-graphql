@@ -1,10 +1,9 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: my-expenses-db
+    container_name: my-expenses-db-dev
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -13,35 +12,40 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_dev:/var/lib/postgresql/data
     networks:
-      - my-expenses-network
+      - my-expenses-network-dev
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # Application
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: my-expenses-app
+      dockerfile: Dockerfile.dev
+    container_name: my-expenses-app-dev
     restart: unless-stopped
     ports:
       - "4000:4000"
-      - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=4000
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/myexpenses?schema=public
       - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      # Mount source code for hot reload
+      - ./src:/app/src
+      - ./prisma:/app/prisma
+      # Prevent overwriting node_modules
+      - /app/node_modules
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      - my-expenses-network
+      - my-expenses-network-dev
+    command: npm run dev
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s
@@ -50,9 +54,9 @@ services:
       retries: 3
 
 volumes:
-  postgres_data:
+  postgres_data_dev:
     driver: local
 
 networks:
-  my-expenses-network:
+  my-expenses-network-dev:
     driver: bridge

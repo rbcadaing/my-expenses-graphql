@@ -6,12 +6,12 @@ const expenseRepository = new ExpenseRepository(prisma);
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 
                      'July', 'August', 'September', 'October', 'November', 'December'];
 
-interface AdditionalIncome {
+export interface AdditionalIncome {
   description: string;
   amount: number;
 }
 
-interface MonthlyReportArgs {
+export interface MonthlyReportArgs {
   month: number;
   year: number;
   salary: number;
